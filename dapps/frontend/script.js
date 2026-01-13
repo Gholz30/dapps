@@ -26,6 +26,10 @@ async function connectWallet() {
   console.log("window.ethereum", window.ethereum);
 
   try {
+    statusEl.style.color = "black";
+    networkEl.textContent = "-";
+    balanceEl.textContent = "-";
+
     statusEl.textContent = "Connecting...";
 
     // Request wallet accounts
@@ -34,7 +38,7 @@ async function connectWallet() {
     });
 
     const address = accounts[0];
-    addressEl.textContent = address;
+    addressEl.textContent = shortenAddress(address);
     nimEl.textContent = `${NAMA_LENGKAP} | ${NIM}`;
 
 
@@ -52,6 +56,9 @@ async function connectWallet() {
       statusEl.textContent = "Connected ✅";
       statusEl.style.color = "#4cd137";
 
+      connectBtn.disabled = true;
+      connectBtn.textContent = "Wallet Connected";
+
       // Get AVAX balance
       const balanceWei = await window.ethereum.request({
         method: "eth_getBalance",
@@ -68,9 +75,59 @@ async function connectWallet() {
       balanceEl.textContent = "-";
     }
   } catch (error) {
-    console.error(error);
-    statusEl.textContent = "Connection Failed ❌";
+  console.error(error);
+
+  if (error.code === 4001) {
+    statusEl.textContent = "Connection rejected by user ❌";
+  } else {
+    statusEl.textContent = "Unexpected error occurred ❌";
   }
+
+  statusEl.style.color = "red";
+  connectBtn.disabled = false;
+}
+
 }
 
 connectBtn.addEventListener("click", connectWallet);
+
+function shortenAddress(address) {
+  return address.slice(0, 6) + "..." + address.slice(-4);
+}
+
+wwindow.ethereum.on("accountsChanged", (accounts) => {
+  if (accounts.length === 0) {
+    statusEl.textContent = "Disconnected ❌";
+    addressEl.textContent = "-";
+    balanceEl.textContent = "-";
+    networkEl.textContent = "-";
+
+    connectBtn.disabled = false;
+    connectBtn.textContent = "Connect Wallet";
+  } else {
+    addressEl.textContent = shortenAddress(accounts[0]);
+    statusEl.textContent = "Account Changed 🔄";
+    statusEl.style.color = "#0097e6";
+  }
+});
+
+
+window.ethereum.on("chainChanged", (chainId) => {
+  if (chainId === AVALANCHE_FUJI_CHAIN_ID) {
+    networkEl.textContent = "Avalanche Fuji Testnet";
+    statusEl.textContent = "Connected ✅";
+    statusEl.style.color = "#4cd137";
+  } else {
+  networkEl.textContent = "Wrong Network ❌";
+  statusEl.textContent = "Connected (Wrong Network)";
+  statusEl.style.color = "#fbc531";
+  balanceEl.textContent = "-";
+
+  connectBtn.disabled = false;
+  connectBtn.textContent = "Switch Network";
+}
+
+});
+
+
+
