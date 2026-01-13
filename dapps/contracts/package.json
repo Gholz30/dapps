@@ -1,0 +1,17 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "description": "helooo",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git clone https://github.com/avalanche-indonesia/pamulang-university-short-course.git demo-unpam-day-2"
+  },
+  "license": "ISC",
+  "author": "nazmifirdaus",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

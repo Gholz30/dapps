@@ -3,6 +3,10 @@ const statusEl = document.getElementById("status");
 const addressEl = document.getElementById("address");
 const networkEl = document.getElementById("network");
 const balanceEl = document.getElementById("balance");
+const nimEl = document.getElementById("nim");
+const NAMA_LENGKAP = "Mohammad Nazmi Firdaus";
+const NIM = "241011402802"; 
+
 
 // Avalanche Fuji Testnet chainId (hex)
 const AVALANCHE_FUJI_CHAIN_ID = "0xa869";
@@ -31,6 +35,8 @@ async function connectWallet() {
 
     const address = accounts[0];
     addressEl.textContent = address;
+    nimEl.textContent = `${NAMA_LENGKAP} | ${NIM}`;
+
 
     console.log({ address });
 
